@@ -35,5 +35,3 @@ def checkout(skus):
     if 'B' in sku_counts:
         checkout_price += sku_counts['B'] * item_prices['B']
     return checkout_price
-
-
