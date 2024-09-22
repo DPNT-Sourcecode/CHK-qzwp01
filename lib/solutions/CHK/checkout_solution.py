@@ -24,7 +24,6 @@ def checkout(skus):
         'E': ('B', 2),
         'N': ('M', 3),
         'R': ('Q', 3),
-        'U': ('U', 3)
     }
     checkout_price = 0
     sku_counts = {}
@@ -39,6 +38,11 @@ def checkout(skus):
             free_count = sku_counts[offer_sku] // qty_required
             if free_sku in sku_counts:
                 sku_counts[free_sku] = max(0, sku_counts[free_sku] - free_count)
+    if 'U' in sku_counts:
+        u_count = sku_counts['U']
+        end_cost = u_count - (u_count // 4)
+        checkout_price += end_cost * item_prices['U']
+        del sku_counts['U']
 
     for sku, count in sku_counts.items():
         if sku in special_offers:
@@ -50,4 +54,3 @@ def checkout(skus):
 
 
     return checkout_price
-
