@@ -3,10 +3,11 @@
 # noinspection PyUnusedLocal
 # skus = unicode string
 def checkout(skus):
-    item_prices = {'A':50,'B':30,'C':20,'D':15, 'E':40}
+    item_prices = {'A':50,'B':30,'C':20,'D':15, 'E':40, 'F':10}
     special_offers = {
         'A': [(5, 200), (3,130)],
-        'B': [(2,45)]
+        'B': [(2,45)],
+        'F': [(3, 20)]
     }
     checkout_price = 0
     sku_counts = {}
@@ -33,3 +34,4 @@ def checkout(skus):
 
 
     return checkout_price
+
