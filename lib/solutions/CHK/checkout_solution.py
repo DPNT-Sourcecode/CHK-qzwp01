@@ -28,10 +28,12 @@ def checkout(skus):
         count_E = sku_counts['E']
         if count_E >= 2 and 'B' in sku_counts:
             count_B_free = count_E // 2
+            sku_counts['B'] -= count_B_free
             if sku_counts['B'] < 0:
                 sku_counts['B'] = 0
 
     if 'B' in sku_counts:
         checkout_price += sku_counts['B'] * item_prices['B']
     return checkout_price
+
 
