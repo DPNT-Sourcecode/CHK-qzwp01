@@ -6,8 +6,8 @@ def checkout(skus):
     item_prices = {'A':50,'B':30,'C':20,'D':15, 'E':40, 'F':10,
                    'G': 20, 'H': 10, 'I':35, 'J':60, 'K':80,
                    'L':90, 'M':15, 'N':40, 'O':10, 'P':50, 'Q':30,
-                   'R':50, 'S':30, 'T':20, 'U':40, 'V':50, 'W':20,
-                   'X':90, 'Y':10, 'Z':50
+                   'R':50, 'S':20, 'T':20, 'U':40, 'V':50, 'W':20,
+                   'X':17, 'Y':20, 'Z':21
                    }
     special_offers = {
         'A': [(5, 200), (3,130)],
@@ -25,6 +25,8 @@ def checkout(skus):
         'N': ('M', 3),
         'R': ('Q', 3),
     }
+
+    group_discount = (['S', 'T', 'X', 'Y', 'Z'], 45, 3)
     checkout_price = 0
     sku_counts = {}
 
@@ -44,6 +46,25 @@ def checkout(skus):
         checkout_price += end_cost * item_prices['U']
         del sku_counts['U']
 
+    group_items = group_discount[0]
+    group_price = group_discount[1]
+    group_size = group_discount[2]
+
+    group_item_count = sum(sku_counts.get(item, 0) for item in group_items)
+    sets_of_three = group_item_count // group_size
+    checkout_price += sets_of_three * group_price
+
+    remaining_to_deduct = sets_of_three * group_size
+    for item in group_items:
+        if item in sku_counts:
+            if sku_counts[item] <= remaining_to_deduct:
+                remaining_to_deduct -= sku_counts[item]
+                del sku_counts[item]
+            else:
+                sku_counts[item] -= remaining_to_deduct
+                remaining_to_deduct = 0
+
+
     for sku, count in sku_counts.items():
         if sku in special_offers:
             for offer_count, offer_price in sorted(special_offers[sku], reverse=True):
@@ -54,3 +75,4 @@ def checkout(skus):
 
 
     return checkout_price
+
