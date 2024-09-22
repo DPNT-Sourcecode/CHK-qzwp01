@@ -4,6 +4,11 @@
 # skus = unicode string
 def checkout(skus):
     item_prices = {'A':50,'B':30,'C':20,'D':15, 'E':40}
+    special_offers = {
+        'A': [(5, 200), (3,130)],
+        'B': [(2,45)],
+        'E': [(2,0)]
+    }
     checkout_price = 0
     sku_counts = {}
 
@@ -13,29 +18,25 @@ def checkout(skus):
         sku_counts[sku] = sku_counts.get(sku, 0) + 1
 
     for sku, count in sku_counts.items():
+        if sku in special_offers:
+            for offer_count, offer_price in special_offers[sku]:
+                while count >= offer_count:
+                    checkout_price += offer_price
+                    count -= offer_count
         checkout_price += count * item_prices[sku]
 
-    if 'A' in sku_counts:
-        count_A = sku_counts['A']
-        checkout_price -= (count_A//5) * 200 + (count_A % 5 // 3) * 130 + (count_A % 5 % 3) * item_prices['A']
+        if 'E' in sku_counts and 'B' in sku_counts:
+            count_E = sku_counts['E']
+            if count_E >= 2:
+                free_B_count = count_E // 2
+                sku_counts['B'] -= free_B_count
+                if sku_counts['B'] < 0:
+                    sku_counts['B'] = 0
 
     if 'B' in sku_counts:
         count_B = sku_counts['B']
-        checkout_price += (count_B // 2) * 45 + (count_B % 2) * item_prices['B']
-    for sku in skus:
-        if sku not in ['A', 'B', 'E']:
-            checkout_price += sku_counts[sku] * item_prices[sku]
-
-    if 'E' in sku_counts:
-        count_E = sku_counts['E']
-        if count_E >= 2 and 'B' in sku_counts:
-            count_B_free = count_E // 2
-            sku_counts['B'] -= count_B_free
-            if sku_counts['B'] < 0:
-                sku_counts['B'] = 0
-
-    if 'B' in sku_counts:
-        checkout_price += sku_counts['B'] * item_prices['B']
+        checkout_price += count_B * item_prices['B']
 
     return checkout_price
+
 
