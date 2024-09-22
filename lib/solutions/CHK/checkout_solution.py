@@ -34,4 +34,3 @@ def checkout(skus):
 
 
     return checkout_price
-
