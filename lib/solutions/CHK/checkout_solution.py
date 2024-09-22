@@ -16,5 +16,3 @@ def checkout(skus):
     if skus.count('B') >= 2:
         checkout_price -= (skus.count('B') // 2) * (2 * item_prices['B'] - 45)
     return checkout_price
-
-
