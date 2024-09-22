@@ -8,7 +8,7 @@ def checkout(skus):
 
     for sku in skus:
         if sku not in item_prices:
-            return False
+            return -1
         checkout_price += item_prices[sku]
 
     if skus.count('A') >= 3:
@@ -16,4 +16,5 @@ def checkout(skus):
     if skus.count('B') >= 2:
         checkout_price -= (skus.count('B') // 2) * (2 * item_prices['B'] - 45)
     return checkout_price
+
 
