@@ -40,11 +40,7 @@ def checkout(skus):
             free_count = sku_counts[offer_sku] // qty_required
             if free_sku in sku_counts:
                 sku_counts[free_sku] = max(0, sku_counts[free_sku] - free_count)
-    if 'U' in sku_counts:
-        u_count = sku_counts['U']
-        end_cost = u_count - (u_count // 4)
-        checkout_price += end_cost * item_prices['U']
-        del sku_counts['U']
+
 
     group_items = group_discount[0]
     group_price = group_discount[1]
@@ -55,14 +51,13 @@ def checkout(skus):
     checkout_price += sets_of_three * group_price
 
     remaining_to_deduct = sets_of_three * group_size
-    for item in group_items:
-        if item in sku_counts:
-            if sku_counts[item] <= remaining_to_deduct:
-                remaining_to_deduct -= sku_counts[item]
+    for item in sorted(group_items, key=lambda x: item_prices[x], reverse=True):
+        if item in sku_counts and remaining_to_deduct > 0:
+            deduct_amount = min(sku_counts[item], remaining_to_deduct)
+            sku_counts[item] -= deduct_amount
+            remaining_to_deduct -= deduct_amount
+            if sku_counts[item] == 0:
                 del sku_counts[item]
-            else:
-                sku_counts[item] -= remaining_to_deduct
-                remaining_to_deduct = 0
 
 
     for sku, count in sku_counts.items():
@@ -75,3 +70,4 @@ def checkout(skus):
 
 
     return checkout_price
+
